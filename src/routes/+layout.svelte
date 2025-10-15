@@ -9,7 +9,6 @@
 	<title>MQO Utilities</title>
 	<link rel="icon" href={favicon} />
 </svelte:head>
-
-<main>
+<main class="mx-auto max-w-7xl">
 	{@render children?.()}
 </main>
