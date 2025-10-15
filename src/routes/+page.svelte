@@ -55,6 +55,6 @@
 		<Tabs.Content value="plaintext">
 			<Textarea bind:value={text} class="h-[60vh] w-full" />
 		</Tabs.Content>
-		<Tabs.Content value="structured-view">Change your password here.</Tabs.Content>
+		<Tabs.Content value="structured-view">まだないよ</Tabs.Content>
 	</Tabs.Root>
 </div>
