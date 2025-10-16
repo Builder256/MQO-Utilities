@@ -9,15 +9,11 @@ interface ParsedObject {
 }
 
 export default class MQOExtractor {
-	/**
-	 * 改行コード
-	 * MQOの仕様によって改行コードはCRLFのはず
-	 * git管理すると勝手に変換されちゃうかも？
-	 */
-	private static readonly NEW_LINE: '\r\n';
+	private NEW_LINE: string;
 	public objectNames: string[];
 
 	constructor() {
+		this.NEW_LINE = '\r\n';
 		this.objectNames = [];
 	}
 
@@ -28,7 +24,6 @@ export default class MQOExtractor {
 			this.listName(object);
 		}
 
-		console.log(this.objectNames);
 		return this.objectNames;
 	}
 
@@ -70,7 +65,7 @@ export default class MQOExtractor {
 	}
 
 	private parseMQO(mqoText: string): ParsedObject[] {
-		const lines = mqoText.split(MQOExtractor.NEW_LINE);
+		const lines = mqoText.split(this.NEW_LINE);
 		const parsedObjects: ParsedObject[] = [];
 
 		let currentObject: { name: string; depth: number | null } | null = null;
