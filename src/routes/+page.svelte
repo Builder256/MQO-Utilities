@@ -8,20 +8,26 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 
 	import MQOExtractor from '../MQOExtractor';
+	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
+	import FileTree from './FileTree.svelte';
 
+	let fileList: FileList | undefined = $state();
 	let text = $state('');
-	let file: FileList | undefined = $state();
-	$inspect(file);
+	let objTree: ObjectStructure[] = $state([]);
+	// $inspect(objTree);
+
+	import type { ObjectStructure } from '../MQOExtractor';
 
 	async function extractObjects() {
-		if (!file) return;
-		if (file.length < 1) return;
-		const arrayBuffer = await file[0].arrayBuffer();
+		if (!fileList) return;
+		if (fileList.length < 1) return;
+		const arrayBuffer = await fileList[0].arrayBuffer();
 		const textDecoder = new TextDecoder('shift-jis');
 		const mqoText = textDecoder.decode(arrayBuffer);
 
 		const objectExtractor = new MQOExtractor();
 		text = objectExtractor.extractObjectList(mqoText).join('\n');
+		objTree = objectExtractor.extractObject(mqoText);
 	}
 </script>
 
@@ -46,7 +52,7 @@
 			<Card.Content>
 				<div class="col-span-12 grid w-full max-w-sm items-center gap-4">
 					<Label for="file">MQOファイルをアップロード</Label>
-					<Input id="file" type="file" accept=".mqo" bind:files={file} />
+					<Input id="file" type="file" accept=".mqo" bind:files={fileList} />
 				</div>
 			</Card.Content>
 		</Card.Root>
@@ -65,7 +71,7 @@
 			</Card.Action>
 		</Card.Header>
 		<Card.Content class="flex flex-col gap-4">
-			<Tabs.Root value="plaintext" class="col-span-12 w-full">
+			<Tabs.Root value="structured-view" class="col-span-12 w-full">
 				<Tabs.List>
 					<Tabs.Trigger value="plaintext">プレーンテキスト</Tabs.Trigger>
 					<Tabs.Trigger value="structured-view">構造化ビュー</Tabs.Trigger>
@@ -73,7 +79,21 @@
 				<Tabs.Content value="plaintext">
 					<Textarea bind:value={text} class="h-64 w-full" />
 				</Tabs.Content>
-				<Tabs.Content value="structured-view">まだないよ</Tabs.Content>
+				<Tabs.Content
+					value="structured-view"
+					class="overflow-hidden rounded-lg border border-(--border)"
+				>
+					<div class="flex h-10 bg-(--border)">
+						<div class="grid w-8 place-items-center">
+							<Checkbox />
+						</div>
+						<div class="w-12"></div>
+						<div class="grid place-items-center ps-2 text-sm font-bold">オブジェクト名</div>
+					</div>
+					{#each objTree as file}
+						<FileTree item={file} nested={0}></FileTree>
+					{/each}
+				</Tabs.Content>
 			</Tabs.Root>
 		</Card.Content>
 	</Card.Root>

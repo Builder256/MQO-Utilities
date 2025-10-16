@@ -1,4 +1,4 @@
-interface ObjectStructure {
+export interface ObjectStructure {
 	name: string;
 	childObjects: ObjectStructure[];
 }
