@@ -8,7 +8,6 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 
 	import MQOExtractor from '../MQOExtractor';
-	const objectExtractor = new MQOExtractor();
 
 	let text = $state('');
 	let file: FileList | undefined = $state();
@@ -21,6 +20,7 @@
 		const textDecoder = new TextDecoder('shift-jis');
 		const mqoText = textDecoder.decode(arrayBuffer);
 
+		const objectExtractor = new MQOExtractor();
 		text = objectExtractor.extractObjectList(mqoText).join('\n');
 	}
 </script>
